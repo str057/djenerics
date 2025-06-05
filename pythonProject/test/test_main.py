@@ -1,72 +1,103 @@
-import pytest
-from src.main import Product, Category  # Убедитесь, что путь корректный
+import unittest
+from src.main import Product, Smartphone, LawnGrass, Category
 
 
-def test_product_str():
-    product = Product("Test Product", "Test Description", 100.0, 5)
-    assert str(product) == "Test Product, 100.0 руб. Остаток: 5 шт."
+class TestProduct(unittest.TestCase):
+    def setUp(self):
+        self.product1 = Product("Товар 1", "Описание товара 1", 100.0, 10)
+        self.product2 = Product("Товар 2", "Описание товара 2", 200.0, 5)
+        self.smartphone = Smartphone(
+            "Samsung Galaxy S23", "Описание", 100000.0, 5, 95.0, "S23", 256, "Серый"
+        )
+
+    def test_addition_same_type(self):
+        self.assertEqual(self.product1 + self.product2, 300.0)
+
+    def test_addition_different_type(self):
+        with self.assertRaises(TypeError):
+            self.product1 + self.smartphone
 
 
-def test_category_str():
-    products = [
-        Product("Test Product 1", "Description 1", 100.0, 2),
-        Product("Test Product 2", "Description 2", 200.0, 3),
-    ]
-    category = Category("Test Category", "Test Description", products)
-    category_str = str(category)
-    assert "Категория: Test Category" in category_str
-    assert "Количество продуктов: 5 шт." in category_str
-    assert "Список продуктов:" in category_str
-    assert "Test Product 1" in category_str
-    assert "Test Product 2" in category_str
+class TestSmartphone(unittest.TestCase):
+    def setUp(self):
+        self.smartphone = Smartphone(
+            "Samsung Galaxy S23", "Описание", 100000.0, 5, 95.0, "S23", 256, "Серый"
+        )
+
+    def test_smartphone_attributes(self):
+        self.assertEqual(self.smartphone.name, "Samsung Galaxy S23")
+        self.assertEqual(self.smartphone.description, "Описание")
+        self.assertEqual(self.smartphone.price, 100000.0)
+        self.assertEqual(self.smartphone.quantity, 5)
+        self.assertEqual(self.smartphone.efficiency, 95.0)
+        self.assertEqual(self.smartphone.model, "S23")
+        self.assertEqual(self.smartphone.memory, 256)
+        self.assertEqual(self.smartphone.color, "Серый")
+
+    def test_smartphone_addition(self):
+        smartphone2 = Smartphone(
+            "iPhone 15", "Описание", 120000.0, 3, 97.0, "15", 512, "Черный"
+        )
+        self.assertEqual(self.smartphone + smartphone2, 220000.0)
 
 
-def test_product_addition():
-    p1 = Product("Product 1", "Description 1", 100.0, 2)
-    p2 = Product("Product 2", "Description 2", 200.0, 3)
-    expected_sum = p1.price * p1.quantity + p2.price * p2.quantity
-    assert p1 + p2 == expected_sum
+class TestLawnGrass(unittest.TestCase):
+    def setUp(self):
+        self.grass = LawnGrass(
+            "Газонная трава", "Описание", 500.0, 20, "Россия", "7 дней", "Зеленый"
+        )
+
+    def test_lawn_grass_attributes(self):
+        self.assertEqual(self.grass.name, "Газонная трава")
+        self.assertEqual(self.grass.description, "Описание")
+        self.assertEqual(self.grass.price, 500.0)
+        self.assertEqual(self.grass.quantity, 20)
+        self.assertEqual(self.grass.country, "Россия")
+        self.assertEqual(self.grass.germination_period, "7 дней")
+        self.assertEqual(self.grass.color, "Зеленый")
+
+    def test_lawn_grass_addition(self):
+        grass2 = LawnGrass(
+            "Премиум трава", "Описание", 700.0, 15, "Германия", "5 дней", "Изумрудный"
+        )
+        self.assertEqual(self.grass + grass2, 1200.0)
 
 
-def test_product_addition_invalid_type():
-    p1 = Product("Product 1", "Description 1", 100.0, 2)
-    with pytest.raises(TypeError):
-        _ = p1 + 100
+class TestCategory(unittest.TestCase):
+    def setUp(self):
+        Category.product_count = 0  # Сбрасываем счетчик перед каждым тестом
+        self.category = Category("Смартфоны", "Описание категории")
+        self.smartphone = Smartphone(
+            "Samsung Galaxy S23", "Описание", 100000.0, 5, 95.0, "S23", 256, "Серый"
+        )
+        self.grass = LawnGrass(
+            "Газонная трава", "Описание", 500.0, 20, "Россия", "7 дней", "Зеленый"
+        )
 
+    def test_add_product(self):
+        initial_count = Category.product_count
+        self.category.add_product(self.smartphone)
+        self.assertIn(self.smartphone, self.category.products)
+        self.assertEqual(Category.product_count, initial_count + 1)
 
-def test_product_subtraction():
-    p1 = Product("Product 1", "Description 1", 100.0, 5)
-    p2 = Product("Product 2", "Description 2", 50.0, 2)
+    def test_add_invalid_product(self):
+        with self.assertRaises(TypeError):
+            self.category.add_product("Не продукт")
 
-    try:
-        result = p1 - p2
-        expected = p1.price * p1.quantity - p2.price * p2.quantity
-        assert result == expected
-    except TypeError:
-        # Если метод __sub__ не реализован, пропускаем тест
-        pytest.skip("Метод __sub__ не реализован в классе Product")
+    def test_product_count(self):
+        self.assertEqual(Category.product_count, 0)
+        self.category.add_product(self.smartphone)
+        self.assertEqual(Category.product_count, 1)
 
+        # Создаем новую категорию с продуктами
+        new_category = Category("Газоны", "Описание", [self.grass])
+        self.assertEqual(Category.product_count, 2)
 
-def test_product_equality():
-    p1 = Product("Product 1", "Description", 100.0, 2)
-    p2 = Product("Product 1", "Description", 100.0, 2)
-    p3 = Product("Product 3", "Description", 200.0, 1)
-    try:
-        assert p1 == p2
-        assert p1 != p3
-    except AssertionError:
-        pytest.fail("Метод __eq__ не реализован корректно или отсутствует.")
-
-
-def test_product_less_than_greater_than():
-    p1 = Product("Product 1", "Description", 100.0, 2)
-    p2 = Product("Product 2", "Description", 200.0, 3)
-    try:
-        assert p1 < p2
-        assert p2 > p1
-    except TypeError:
-        pytest.skip("Методы __lt__ и __gt__ не реализованы в классе Product.")
+    def test_initial_products(self):
+        category = Category("Тест", "Описание", [self.smartphone, self.grass])
+        self.assertEqual(len(category.products), 2)
+        self.assertEqual(Category.product_count, 2)
 
 
 if __name__ == "__main__":
-    pytest.main()
+    unittest.main()

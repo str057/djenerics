@@ -5,59 +5,147 @@ class Product:
         self.price = price
         self.quantity = quantity
 
-    def __str__(self):
-        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
-
     def __add__(self, other):
-        if not isinstance(other, Product):
-            raise TypeError("Можно складывать только объекты класса Product")
-        return self.price * self.quantity + other.price * other.quantity
+        if type(self) is not type(other):
+            raise TypeError("Нельзя складывать продукты разных категорий")
+        return self.price + other.price
 
-    def __eq__(self, other):
-        if not isinstance(other, Product):
-            return NotImplemented
-        return (
-            self.name == other.name
-            and self.price == other.price
-            and self.quantity == other.quantity
-        )
+
+class Smartphone(Product):
+    def __init__(
+        self, name, description, price, quantity, efficiency, model, memory, color
+    ):
+        super().__init__(name, description, price, quantity)
+        self.efficiency = efficiency
+        self.model = model
+        self.memory = memory
+        self.color = color
+
+
+class LawnGrass(Product):
+    def __init__(
+        self, name, description, price, quantity, country, germination_period, color
+    ):
+        super().__init__(name, description, price, quantity)
+        self.country = country
+        self.germination_period = germination_period
+        self.color = color
 
 
 class Category:
-    def __init__(self, name, description, products):
+    product_count = 0
+
+    def __init__(self, name, description, products=None):
         self.name = name
         self.description = description
-        self.products = products
+        self.products = products if products is not None else []
+        Category.product_count += len(self.products)
 
-    def __str__(self):
-        total_quantity = sum(product.quantity for product in self.products)
-        product_list = "\n".join(str(product) for product in self.products)
-        return (
-            f"Категория: {self.name}\n"
-            f"Описание: {self.description}\n"
-            f"Количество продуктов: {total_quantity} шт.\n"
-            f"Список продуктов:\n{product_list}"
-        )
+    def add_product(self, product):
+        if not isinstance(product, Product):
+            raise TypeError("Можно добавлять только продукты")
+        self.products.append(product)
+        Category.product_count += 1
 
 
 if __name__ == "__main__":
-    product1 = Product(
-        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
+    # Создание экземпляров смартфонов
+    smartphone1 = Smartphone(
+        "Samsung Galaxy S23 Ultra",
+        "256GB, Серый цвет, 200MP камера",
+        180000.0,
+        5,
+        95.5,
+        "S23 Ultra",
+        256,
+        "Серый",
     )
-    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
-    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
-    print(str(product1))
-    print(str(product2))
-    print(str(product3))
-
-    category1 = Category(
-        "Смартфоны",
-        "Смартфоны, как средство не только коммуникации, но и получения дополнительных функций для удобства жизни",
-        [product1, product2, product3],
+    smartphone2 = Smartphone(
+        "Iphone 15", "512GB, Gray space", 210000.0, 8, 98.2, "15", 512, "Gray space"
     )
-    print("\n" + str(category1))
+    smartphone3 = Smartphone(
+        "Xiaomi Redmi Note 11",
+        "1024GB, Синий",
+        31000.0,
+        14,
+        90.3,
+        "Note 11",
+        1024,
+        "Синий",
+    )
 
-    print("\nСуммарная стоимость товаров:")
-    print(f"{product1.name} + {product2.name} = {product1 + product2} руб.")
-    print(f"{product1.name} + {product3.name} = {product1 + product3} руб.")
-    print(f"{product2.name} + {product3.name} = {product2 + product3} руб.")
+    # Вывод информации о смартфонах
+    for smartphone in [smartphone1, smartphone2, smartphone3]:
+        print(f"Название: {smartphone.name}")
+        print(f"Описание: {smartphone.description}")
+        print(f"Цена: {smartphone.price}")
+        print(f"Количество: {smartphone.quantity}")
+        print(f"Производительность: {smartphone.efficiency}")
+        print(f"Модель: {smartphone.model}")
+        print(f"Объем памяти: {smartphone.memory}")
+        print(f"Цвет: {smartphone.color}\n")
+
+    # Создание экземпляров травы
+    grass1 = LawnGrass(
+        "Газонная трава",
+        "Элитная трава для газона",
+        500.0,
+        20,
+        "Россия",
+        "7 дней",
+        "Зеленый",
+    )
+    grass2 = LawnGrass(
+        "Газонная трава 2",
+        "Выносливая трава",
+        450.0,
+        15,
+        "США",
+        "5 дней",
+        "Темно-зеленый",
+    )
+
+    # Вывод информации о траве
+    for grass in [grass1, grass2]:
+        print(f"Название: {grass.name}")
+        print(f"Описание: {grass.description}")
+        print(f"Цена: {grass.price}")
+        print(f"Количество: {grass.quantity}")
+        print(f"Страна-производитель: {grass.country}")
+        print(f"Срок прорастания: {grass.germination_period}")
+        print(f"Цвет: {grass.color}\n")
+
+    # Сложение смартфонов
+    smartphone_sum = smartphone1 + smartphone2
+    print(f"Сумма цен смартфонов: {smartphone_sum}")
+
+    # Сложение травы
+    grass_sum = grass1 + grass2
+    print(f"Сумма цен травы: {grass_sum}")
+
+    # Проверка на сложение разных категорий
+    try:
+        invalid_sum = smartphone1 + grass1
+    except TypeError as e:
+        print(f"Ошибка: {e}")
+
+    # Создание категорий
+    category_smartphones = Category(
+        "Смартфоны", "Высокотехнологичные смартфоны", [smartphone1, smartphone2]
+    )
+    category_grass = Category(
+        "Газонная трава", "Различные виды газонной травы", [grass1, grass2]
+    )
+
+    # Добавление продукта в категорию
+    category_smartphones.add_product(smartphone3)
+    print(
+        f"Продукты в категории смартфонов: {[product.name for product in category_smartphones.products]}"
+    )
+    print(f"Общее количество продуктов: {Category.product_count}")
+
+    # Проверка на добавление не продукта
+    try:
+        category_smartphones.add_product("Not a product")
+    except TypeError as e:
+        print(f"Ошибка: {e}")
