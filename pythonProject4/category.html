@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Меню</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            left: 0; /* Панель слева */
+            height: 100%;
+            overflow: auto;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+        }
+
+        .sidebar a.active {
+            background-color: blue;
+        }
+
+        .main {
+            margin-left: 220px; /* Отступ под панель */
+            padding: 20px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 2 колонки */
+            gap: 50px; /* Отступы между карточками */
+        }
+
+        .card {
+            background-color: #f1f1f1;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 300px; /* Высота карточки */
+        }
+
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+        }
+        .card-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            display: block;
+}
+    </style>
+
+</head>
+<body>
+<div class="sidebar">
+    <div class="d-flex flex-column p-3 bg-dark text-white">
+        <div class="mb-4">
+            <h4 class="text-uppercase fw-bold">Меню</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a href="/" class="nav-link text-white" data-hover="primary">
+                <i class="fas fa-home me-2"></i> Каталог
+            </a>
+            <a href="/categories" class="nav-link text-white" data-hover="primary">
+                <i class="fas fa-list me-2"></i> Категории
+            </a>
+            <a href="/orders" class="nav-link text-white" data-hover="primary">
+                <i class="fas fa-shopping-cart me-2"></i> Заказы
+            </a>
+            <a href="/contacts" class="nav-link text-white" data-hover="primary">
+                <i class="fas fa-address-book me-2"></i> Контакты
+            </a>
+        </nav>
+    </div>
+</div>
+
+
+    <div class="container mt-4">
+        <div class="text-center mb-5">
+            <h1>Каталог</h1>
+            <p class="lead">Вы находитесь на сайте, предназначенном для продажи товаров.</p>
+        </div>
+
+        <!-- Основное содержимое -->
+        <div class="main">
+            <div class="card-grid">
+                <!-- Карточка 1 -->
+                <div class="card">
+                    <h5 class="card-header">от 17530$</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Легковой автомобиль</h5>
+                        <p class="card-text">Предназначенный для перевозки людей и их багажа, обычно вмещает не более девяти посадочных мест.</p>
+                        <a href="#" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+
+                <!-- Карточка 2 -->
+                <div class="card">
+                    <h5 class="card-header">от 3000$</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Мотоцикл</h5>
+                        <p class="card-text">Двухколёсное механическое транспортное средство с боковым прицепом или без него.</p>
+                        <a href="#" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+
+                <!-- Карточка 3 -->
+                <div class="card">
+                    <h5 class="card-header">от 80000$</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Грузовой автомобиль</h5>
+                        <p class="card-text">Предназначен для перевозки грузов в кузове или на грузовой платформе.</p>
+                        <a href="#" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+                <!-- Карточка 1 -->
+                <div class="card">
+                    <h5 class="card-header">от 70000$</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">1000$</h5>
+                        <p class="card-text">Предназначенный для перевозки людей и их багажа, обычно вмещает не более девяти посадочных мест.</p>
+                        <a href="#" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+
+                <!-- Карточка 2 -->
+                <div class="card">
+                    <h5 class="card-header">от 10$</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Запчасти</h5>
+                        <p class="card-text">Для ремонта и облуживания.</p>
+                        <a href="#" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+
+                <!-- Карточка 3 -->
+                <div class="card">
+                    <h5 class="card-header">от 5$</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Аксессуары</h5>
+                        <p class="card-text">Для улучшения вида вашего авто.</p>
+                        <a href="#" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
