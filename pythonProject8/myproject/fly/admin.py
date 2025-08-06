@@ -1,14 +1,15 @@
 from django.contrib import admin
-from fly.models import Product, Category
+from .models import Category, Product
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
+    list_display = ("id", "name")
+    search_fields = ("name", "description")  #  Поиск по name и description
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'category')
-    list_filter = ('category',)
-    search_fields = ('name', 'description')
+    list_display = ("id", "name", "price", "category")  #  требуемые поля
+    list_filter = ("category",)  #  Фильтрация по категории
+    search_fields = ("name", "description")  # Поиск по name и description
